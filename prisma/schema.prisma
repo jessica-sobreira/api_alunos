@@ -10,11 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum TipoAluno {
+  T
+  M
+  F
+}
+
 model Aluno {
   id String @db.Uuid @id @default(uuid())
   nome String @db.VarChar(50)
   email String @db.VarChar(50) @unique
   senha String @db.VarChar(50)
+  tipo TipoAluno?
+  
 
   token String?
 
@@ -29,7 +37,7 @@ model Aluno {
   @@map("aluno")
 }
 
-// 1 - 1
+
 model Endereco {
   idAluno String @db.Uuid @id @map("id_aluno")
   rua String @db.VarChar(30)
@@ -44,7 +52,7 @@ model Endereco {
   @@map("endereco")
 }
 
-// 1 - N
+
 model Avaliacao {
   id String @db.Uuid @id @default(uuid())
   disciplina String @db.VarChar(30)
@@ -70,7 +78,7 @@ model Turma {
   @@map("turma")
 }
 
-// N - N
+
 model Matricula {
   idAluno String @db.Uuid @map("id_aluno")
   idTurma String @db.Uuid @map("id_turma")
