@@ -4,19 +4,20 @@ import repository from "../database/prisma.repository";
 export class AlunoService {
 
     public async criarAluno(nome: string, email: string, senha: string, tipo: string, idade?: number): Promise<Aluno> {
+        if (tipo !== 'M' && tipo !== 'T' && tipo !== 'F') {
+            throw new Error("Tipo de aluno inválido. O tipo deve ser 'M', 'T' ou 'F'.");
+        }
+
         const aluno = new Aluno(nome, email, senha, tipo, idade);
-        const novoAluno = await repository.aluno.create({ data: aluno as any });
+        const novoAluno = await repository.aluno.create({ data: aluno });
         return novoAluno as Aluno;
     }
 
-
-    // Obter um aluno pelo ID
     public async obterAlunoPorId(id: string): Promise<Aluno | null> {
         const aluno = await repository.aluno.findUnique({ where: { id } });
         return aluno as Aluno || null;
     }
 
-    // Atualizar um aluno
     public async atualizarAluno(id: string, nome?: string, idade?: number): Promise<Aluno> {
         const alunoExistente = await repository.aluno.findUnique({ where: { id } });
 
@@ -32,7 +33,6 @@ export class AlunoService {
         return alunoAtualizado as Aluno;
     }
 
-    // Deletar um aluno
     public async deletarAluno(id: string): Promise<void> {
         const alunoExistente = await repository.aluno.findUnique({ where: { id } });
 
@@ -43,7 +43,6 @@ export class AlunoService {
         await repository.aluno.delete({ where: { id } });
     }
 
-    // Listar todos os alunos
     public async listarAlunos(): Promise<Aluno[]> {
         const alunos = await repository.aluno.findMany();
         return alunos as Aluno[];

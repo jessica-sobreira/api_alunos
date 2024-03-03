@@ -9,14 +9,14 @@ export class AlunoController {
         try {
             const { nome, email, senha, idade, tipo } = req.body;
 
-            if (!nome || !email || !senha) {
+            if (!nome || !email || !senha || !tipo) {
                 return res.status(400).send({
                     ok: false,
-                    message: "Nome, email e senha são campos obrigatórios",
+                    message: "Nome, email, senha e tipo são campos obrigatórios",
                 });
             }
 
-            const aluno = await alunoService.criarAluno(nome, email, senha, idade, tipo);
+            const aluno = await alunoService.criarAluno(nome, email, senha, tipo, idade);
 
             return res.status(201).send({
                 ok: true,
