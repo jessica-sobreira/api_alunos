@@ -15,10 +15,10 @@ export function avaliacaoRoutes() {
     const avaliacaoController = new AvaliacaoController();
 
     // Rotas de avaliação
-    router.post("/", [validaLoginMiddleware, verificarPermissaoAluno ], avaliacaoController.criarAvaliacao);
+    router.post("/", [validaLoginMiddleware, verificarPermissaoAluno], avaliacaoController.criarAvaliacao);
     router.put("/:idAvaliacao", [validaLoginMiddleware, verificarPermissaoAlunoTipoT], avaliacaoController.atualizarAvaliacao);
     router.delete("/:idAvaliacao", [validaLoginMiddleware, verificarPermissaoAlunoTipoT], avaliacaoController.excluirAvaliacao);
-    router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware], avaliacaoController.listarAvaliacoes);
+    router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware, verificarPermissaoAluno], avaliacaoController.listarAvaliacoes);
 
     return router;
 }
