@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AvaliacaoController } from "../controllers/avaliacao.controller";
 import { validaLoginMaiorIdadeMiddleware, validaLoginMiddleware } from "../middlewares/login.middleware";
 import { verificarPermissaoAluno } from "../middlewares/avaliacao.middleware";
+import { verificarPermissaoAlunoTipoT } from "../middlewares/techHelper.middleware";
 
 
 // http://localhost:3335/aluno/:id/avaliacao
@@ -15,7 +16,8 @@ export function avaliacaoRoutes() {
 
     // Rotas de avaliação
     router.post("/", [validaLoginMiddleware, verificarPermissaoAluno ], avaliacaoController.criarAvaliacao);
-    router.put("/:idAvaliacao", [validaLoginMiddleware], avaliacaoController.atualizarAvaliacao);
+    router.put("/:idAvaliacao", [validaLoginMiddleware, verificarPermissaoAlunoTipoT], avaliacaoController.atualizarAvaliacao);
+    router.delete("/:idAvaliacao", [validaLoginMiddleware, verificarPermissaoAlunoTipoT], avaliacaoController.excluirAvaliacao);
     router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware], avaliacaoController.listarAvaliacoes);
 
     return router;
