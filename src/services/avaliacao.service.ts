@@ -110,7 +110,6 @@ export class AvaliacaoService {
                 throw new Error("Aluno não encontrado.");
             }
     
-            // Adaptar o aluno para o formato desejado, se necessário
             const alunoAdaptado = adaptAlunoPrisma(aluno);
     
             const avaliacao: Avaliacao = {
@@ -126,6 +125,24 @@ export class AvaliacaoService {
         }
     }
 
+    // Excluir uma avaliação
+    public async excluirAvaliacao(idAvaliacao: string): Promise<void> {
+        try {
+            const avaliacaoExistente = await repository.avaliacao.findUnique({
+                where: { id: idAvaliacao },
+            });
+
+            if (!avaliacaoExistente) {
+                throw new Error("Avaliação não encontrada.");
+            }
+
+            await repository.avaliacao.delete({
+                where: { id: idAvaliacao },
+            });
+        } catch (error: any) {
+            throw new Error(`Erro ao excluir avaliação: ${error.message}`);
+        }
+    }
 
 }
 

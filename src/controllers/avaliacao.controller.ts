@@ -67,4 +67,20 @@ export class AvaliacaoController {
         }
     }
 
+     // DELETE http://localhost:3335/aluno/:id/avaliacao/:idAvaliacao
+     public async excluirAvaliacao(req: Request, res: Response) {
+        try {
+            const { idAvaliacao } = req.params;
+
+            await avaliacaoService.excluirAvaliacao(idAvaliacao);
+
+            return res.status(200).send({
+                ok: true,
+                message: "Avaliação excluída com sucesso",
+            });
+        } catch (error: any) {
+            return erroServidor(res, error);
+        }
+    }
+
 }

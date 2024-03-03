@@ -15,8 +15,8 @@ export function avaliacaoRoutes() {
 
     // Rotas de avaliação
     router.post("/", [validaLoginMiddleware, verificarPermissaoAluno ], avaliacaoController.criarAvaliacao);
-    router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware], avaliacaoController.listarAvaliacoes);
     router.put("/:idAvaliacao", [validaLoginMiddleware], avaliacaoController.atualizarAvaliacao);
+    router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware], avaliacaoController.listarAvaliacoes);
 
     return router;
 }
