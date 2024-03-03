@@ -1,34 +1,27 @@
 import { Request, Response } from "express";
-import { Aluno } from "../models/aluno.model";
-import repository from "../database/prisma.repository";
-import { erroNaoEncontrado } from "../util/response.helper";
+import { AlunoService } from "../services/aluno.service";
+
+const alunoService = new AlunoService();
 
 export class AlunoController {
-    // Criar um novo aluno
+
     public async criarAluno(req: Request, res: Response) {
         try {
-            // 1- Entrada
-            const { nome, email, senha, idade } = req.body;
+            const { nome, email, senha, idade, tipo } = req.body;
 
-            if (!nome) {
+            if (!nome || !email || !senha) {
                 return res.status(400).send({
                     ok: false,
-                    message: "Nome não foi informado",
+                    message: "Nome, email e senha são campos obrigatórios",
                 });
             }
 
-            // 2- Processamento
-            const aluno = new Aluno(nome, email, senha, idade);
+            const aluno = await alunoService.criarAluno(nome, email, senha, idade, tipo);
 
-            const result = await repository.aluno.create({
-                data: aluno,
-            });
-
-            // 3- Saída
             return res.status(201).send({
                 ok: true,
                 message: "Usuário criado com sucesso",
-                data: result,
+                data: aluno,
             });
         } catch (error: any) {
             return res.status(500).send({
@@ -41,15 +34,9 @@ export class AlunoController {
     // Obter um aluno pelo ID
     public async obterAluno(req: Request, res: Response) {
         try {
-            // 1- Entrada
             const { id } = req.params;
 
-            // 2- Processamento
-            const aluno = await repository.aluno.findUnique({
-                where: {
-                    id,
-                },
-            });
+            const aluno = await alunoService.obterAlunoPorId(id);
 
             if (!aluno) {
                 return res.status(404).send({
@@ -58,7 +45,6 @@ export class AlunoController {
                 });
             }
 
-            // 3- Saída
             return res.status(200).send({
                 ok: true,
                 message: "Aluno obtido com sucesso",
@@ -72,10 +58,9 @@ export class AlunoController {
         }
     }
 
-    // PUT - atualizar um aluno
+    // Atualizar um aluno
     public async atualizarAluno(req: Request, res: Response) {
         try {
-            // 1- Entrada
             const { id } = req.params;
             const { nome, idade } = req.body;
 
@@ -86,34 +71,12 @@ export class AlunoController {
                 });
             }
 
-            // 2- Processamento
-            // verificar se o aluno existe
-            const aluno = await repository.aluno.findUnique({
-                where: {
-                    id,
-                },
-            });
+            const aluno = await alunoService.atualizarAluno(id, nome, idade);
 
-            if (!aluno) {
-                return erroNaoEncontrado(res, "Aluno");
-            }
-
-            // atualizar os dados do aluno
-            const result = await repository.aluno.update({
-                where: {
-                    id,
-                },
-                data: {
-                    nome,
-                    idade,
-                },
-            });
-
-            // 3- Saída
             return res.status(200).send({
                 ok: true,
                 message: "Aluno atualizado com sucesso",
-                data: result,
+                data: aluno,
             });
         } catch (error: any) {
             return res.status(500).send({
@@ -123,35 +86,13 @@ export class AlunoController {
         }
     }
 
-    // DELETE - deletar um aluno
+    // Deletar um aluno
     public async deletarAluno(req: Request, res: Response) {
         try {
-            // 1- Entrada
             const { id } = req.params;
 
-            // 2- Processamento
-            // verificar se o aluno existe, se não 404
-            const aluno = await repository.aluno.findUnique({
-                where: {
-                    id,
-                },
-            });
+            await alunoService.deletarAluno(id);
 
-            if (!aluno) {
-                return res.status(404).send({
-                    ok: false,
-                    message: "Aluno não encontrado",
-                });
-            }
-
-            // deletar o aluno
-            await repository.aluno.delete({
-                where: {
-                    id,
-                },
-            });
-
-            // 3- Saída
             return res.status(200).send({
                 ok: true,
                 message: "Aluno deletado com sucesso",
@@ -164,14 +105,15 @@ export class AlunoController {
         }
     }
 
+    // Listar todos os alunos
     public async listarAlunos(req: Request, res: Response) {
         try {
-            const result = await repository.aluno.findMany();
+            const alunos = await alunoService.listarAlunos();
 
             return res.status(200).send({
                 ok: true,
                 message: "Alunos listados com sucesso",
-                data: result,
+                data: alunos,
             });
         } catch (error: any) {
             return res.status(500).send({

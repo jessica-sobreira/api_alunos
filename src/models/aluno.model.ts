@@ -7,7 +7,9 @@ export class Aluno {
         public nome: string,
         public email: string,
         public senha: string,
-        public idade?: number
+        public tipo: string,
+        public idade?: number,
+
     ) {
         this.id = randomUUID();
     }
