@@ -7,7 +7,7 @@ export class Aluno {
         public nome: string,
         public email: string,
         public senha: string,
-        public tipo: "T" | "M" | "F", 
+        public tipo: "M" | "T" | "F",
         public idade?: number,
     ) {
         this.id = randomUUID();

@@ -6,7 +6,8 @@ export function adaptAlunoPrisma(aluno: Aluno): AlunoBackend {
         aluno.nome,
         aluno.email,
         aluno.senha,
-        aluno.idade ?? undefined
+        aluno.tipo as "M" | "T" | "F",
+        aluno.idade ?? 0 
     );
     novoAluno.id = aluno.id;
 
