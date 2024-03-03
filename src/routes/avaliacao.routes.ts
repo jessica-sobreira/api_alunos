@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { AvaliacaoController } from "../controllers/avaliacao.controller";
 import { validaLoginMaiorIdadeMiddleware, validaLoginMiddleware } from "../middlewares/login.middleware";
+import { verificarPermissaoAluno } from "../middlewares/avaliacao.middleware";
+
 
 // http://localhost:3335/aluno/:id/avaliacao
 
@@ -12,7 +14,7 @@ export function avaliacaoRoutes() {
     const avaliacaoController = new AvaliacaoController();
 
     // Rotas de avaliação
-    router.post("/", [validaLoginMiddleware], avaliacaoController.criarAvaliacao);
+    router.post("/", [validaLoginMiddleware, verificarPermissaoAluno ], avaliacaoController.criarAvaliacao);
     router.get("/", [validaLoginMiddleware, validaLoginMaiorIdadeMiddleware], avaliacaoController.listarAvaliacoes);
     router.put("/:idAvaliacao", [validaLoginMiddleware], avaliacaoController.atualizarAvaliacao);
 
