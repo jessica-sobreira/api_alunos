@@ -11,5 +11,5 @@ export function adaptAlunoPrisma(aluno: Aluno): AlunoBackend {
     );
     novoAluno.id = aluno.id;
 
-    return novoAluno;
+    return novoAluno as AlunoBackend;
 }
